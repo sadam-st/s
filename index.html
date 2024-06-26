@@ -610,45 +610,59 @@
                 </div>
               </div><!-- End Info Item -->
 
-              <iframe src="https://maps.app.goo.gl/FRgoHLdGhrGava5o7" frameborder="0" style="border:0; width: 100%; height: 270px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14386.237082258838!2d-100.3010082095969!3d25.652749087217668!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8662bfb761b540e1%3A0x8f4f0a5e7598d87a!2sTecnol%C3%B3gico%2C%20Monterrey%2C%20Nuevo%20Leon!5e0!3m2!1sen!2smx!4v1719437215962!5m2!1sen!2smx" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
           </div>
 
-          <div class="col-lg-7">
-            <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
-              <div class="row gy-4">
+         <div class="col-lg-7">
+    <div id="map" style="width: 100%; height: 500px;"></div>
+</div>
 
-                <div class="col-md-6">
-                  <label for="name-field" class="pb-2">Your Name</label>
-                  <input type="text" name="name" id="name-field" class="form-control" required="">
-                </div>
+<!-- Load the Google Maps API (replace `YOUR_API_KEY` with your actual API key) -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+<script>
+    function initMap() {
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
 
-                <div class="col-md-6">
-                  <label for="email-field" class="pb-2">Your Email</label>
-                  <input type="email" class="form-control" name="email" id="email-field" required="">
-                </div>
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 12,
+                    center: pos
+                });
 
-                <div class="col-md-12">
-                  <label for="subject-field" class="pb-2">Subject</label>
-                  <input type="text" class="form-control" name="subject" id="subject-field" required="">
-                </div>
+                var marker = new google.maps.Marker({
+                    position: pos,
+                    map: map,
+                    title: 'Your Location'
+                });
 
-                <div class="col-md-12">
-                  <label for="message-field" class="pb-2">Message</label>
-                  <textarea class="form-control" name="message" rows="10" id="message-field" required=""></textarea>
-                </div>
+            }, function() {
+                handleLocationError(true, map.getCenter());
+            });
+        } else {
+            // Browser doesn't support Geolocation
+            handleLocationError(false, map.getCenter());
+        }
+    }
 
-                <div class="col-md-12 text-center">
-                  <div class="loading">Loading</div>
-                  <div class="error-message"></div>
-                  <div class="sent-message">Your message has been sent. Thank you!</div>
+    function handleLocationError(browserHasGeolocation, pos) {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 6,
+            center: {lat: -34.397, lng: 150.644}
+        });
 
-                  <button type="submit">Send Message</button>
-                </div>
-
-              </div>
-            </form>
-          </div><!-- End Contact Form -->
+        var infoWindow = new google.maps.InfoWindow({map: map});
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+            'Error: The Geolocation service failed.' :
+            'Error: Your browser doesn\'t support geolocation.');
+    }
+</script>
 
         </div>
 
